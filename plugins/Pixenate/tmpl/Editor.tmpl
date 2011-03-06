@@ -48,14 +48,28 @@
    {
        var id = <mt:Var name="id"/>;
        var changedImage = PXN8.getUncompressedImage();
+
+       var element = document.getElementById("pxn8_image");
+       var width = element.getAttribute("width");
+       var height = element.getAttribute("height");
+
        if (changedImage){
            var status = document.getElementById("pxn8_status");
            status.innerHTML = "Saving Image. Please wait... <img src=\"" + StaticURI + "images/indicator.white.gif\" height=\"10\" width=\"10\" style=\"vertical-align:middle\" alt=\"...\" />";
 
            var changedImageURL = PXN8.server + PXN8.root + "/" + changedImage;
-           jsonRequest(ScriptURI + '?__mode=pixenate_save_changes&id=' + id + "&changedImageURL=" + changedImageURL);
-       }else{
-           parent.jQuery.fn.mtDialog.close();
+           jsonRequest(ScriptURI + '?__mode=pixenate_save_changes&id=' + id + "&changedImageURL=" + changedImageURL + "&widht=" + width + "&height=" + height);
+       } else {
+           var size = PXN8.getImageSize();
+           var orig_width = size.width;
+           var orig_height = size.height;
+           if (width != orig_width || height != orig_height){
+               var status = document.getElementById("pxn8_status");
+               status.innerHTML = "Saving Image. Please wait... <img src=\"" + StaticURI + "images/indicator.white.gif\" height=\"10\" width=\"10\" style=\"vertical-align:middle\" alt=\"...\" />";
+               jsonRequest(ScriptURI + '?__mode=pixenate_save_changes&id=' + id + "&width=" + width + "&height=" + height);
+           } else {
+               parent.jQuery.fn.mtDialog.close();
+           }
        }
    }
 </script>
